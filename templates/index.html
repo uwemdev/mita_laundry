@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to Mita Laundry</h1>
+        <p class="lead mb-4">Professional laundry services with care and precision</p>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-soap fa-3x mb-3"></i>
+                    <h4>Washing</h4>
+                    <p>Professional washing with premium detergents</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-iron fa-3x mb-3"></i>
+                    <h4>Ironing</h4>
+                    <p>Expert ironing for crisp, clean clothes</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-star fa-3x mb-3"></i>
+                    <h4>Wash & Iron</h4>
+                    <p>Complete care for your garments</p>
+                </div>
+            </div>
+        </div>
+        
+        {% if not session.user_id %}
+        <div class="mt-5">
+            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg me-3">Get Started</a>
+            <a href="{{ url_for('track_order') }}" class="btn btn-outline-primary btn-lg">Track Order</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

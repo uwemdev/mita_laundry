@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Order {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Order #{{ order.order_number }}</h3>
+                <span class="badge bg-{{ 'warning' if order.status == 'pending' else 'info' if order.status == 'in_progress' else 'success' }} fs-6">
+                    {{ order.status|replace('_', ' ')|title }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Order Details</h5>
+                        <p><strong>Service Type:</strong> {{ order.service_type|title }}</p>
+                        <p><strong>Pickup Option:</strong> {{ order.pickup_option|title }}</p>
+                        <p><strong>Total Items:</strong> {{ order.total_items }}</p>
+                        <p><strong>Total Price:</strong> ₦{{ "%.2f"|format(order.total_price) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Timeline</h5>
+                        <p><strong>Created:</strong> {{ order.created_at[:16] }}</p>
+                        <p><strong>Last Updated:</strong> {{ order.updated_at[:16] }}</p>
+                        {% if order.completed_at %}
+                        <p><strong>Completed:</strong> {{ order.completed_at[:16] }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h5>Items Breakdown</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set prices = {
+                                'washing': {'tshirts': 20, 'shorts': 25, 'pants': 30, 'caps': 15, 'socks': 10, 'towels': 35, 'bedsheets': 50},
+                                'ironing': {'tshirts': 15, 'shorts': 20, 'pants': 25, 'caps': 10, 'socks': 8, 'towels': 20, 'bedsheets': 30}
+                            } %}
+                            
+                            {% for item in ['tshirts', 'shorts', 'pants', 'caps', 'socks', 'towels', 'bedsheets'] %}
+                                {% if order[item] > 0 %}
+                                <tr>
+                                    <td>{{ item|title }}</td>
+                                    <td>{{ order[item] }}</td>
+                                    <td>
+                                        {% if order.service_type == 'washing' %}
+                                            ₦{{ prices.washing[item] }}
+                                        {% elif order.service_type == 'ironing' %}
+                                            ₦{{ prices.ironing[item] }}
+                                        {% else %}
+                                            ₦{{ prices.washing[item] + prices.ironing[item] }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.service_type == 'washing' %}
+                                            ₦{{ prices.washing[item] * order[item] }}
+                                        {% elif order.service_type == 'ironing' %}
+                                            ₦{{ prices.ironing[item] * order[item] }}
+                                        {% else %}
+                                            ₦{{ (prices.washing[item] + prices.ironing[item]) * order[item] }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4">
+                    <h5>Order Status Progress</h5>
+                    <div class="progress" style="height: 30px;">
+                        <div class="progress-bar 
+                            {% if order.status == 'pending' %}bg-warning w-33
+                            {% elif order.status == 'in_progress' %}bg-info w-66
+                            {% else %}bg-success w-100{% endif %}"
+                            role="progressbar">
+                            {{ order.status|replace('_', ' ')|title }}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span>Pending</span>
+                        <span>In Progress</span>
+                        <span>Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Customer Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ order.username }}</p>
+                {% if order.phone %}
+                <p><strong>Phone:</strong> {{ order.phone }}</p>
+                {% endif %}
+                {% if order.address %}
+                <p><strong>Address:</strong> {{ order.address }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Need Help?</h5>
+            </div>
+            <div class="card-body">
+                <p>If you have any questions about your order, please contact us:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-phone me-2"></i> +234 (811) 057-2387</li>
+                    <li><i class="fas fa-envelope me-2"></i> support@mitaschool.com</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

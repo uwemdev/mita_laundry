@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Orders</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if orders %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Pickup</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_number }}</td>
+                        <td>{{ order.username }}</td>
+                        <td>{{ order.service_type|title }}</td>
+                        <td>{{ order.total_items }}</td>
+                        <td>₦{{ "%.2f"|format(order.total_price) }}</td>
+                        <td>
+                            <select class="form-select form-select-sm status-select" data-order-id="{{ order.id }}">
+                                <option value="pending" {{ 'selected' if order.status == 'pending' }}>Pending</option>
+                                <option value="in_progress" {{ 'selected' if order.status == 'in_progress' }}>In Progress</option>
+                                <option value="completed" {{ 'selected' if order.status == 'completed' }}>Completed</option>
+                            </select>
+                        </td>
+                        <td>{{ order.pickup_option|title }}</td>
+                        <td>{{ order.created_at[:16] }}</td>
+                        <td>
+                            <a href="{{ url_for('order_details', order_number=order.order_number) }}" class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
+            <h4>No orders found</h4>
+            <p class="text-muted">There are no orders in the system yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelects = document.querySelectorAll('.status-select');
+    
+    statusSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            const orderId = this.dataset.orderId;
+            const newStatus = this.value;
+            
+            fetch('/admin/update_order_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    status: newStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error updating status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating status');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

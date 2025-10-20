@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Create Order{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Create New Laundry Order</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Service Type</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="service_type" value="washing" id="washing" checked>
+                                <label class="form-check-label" for="washing">
+                                    <i class="fas fa-soap me-2"></i>Washing Only
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="service_type" value="ironing" id="ironing">
+                                <label class="form-check-label" for="ironing">
+                                    <i class="fas fa-iron me-2"></i>Ironing Only
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="service_type" value="both" id="both">
+                                <label class="form-check-label" for="both">
+                                    <i class="fas fa-star me-2"></i>Wash & Iron
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Pickup Option</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="pickup_option" value="pickup" id="pickup" checked>
+                                <label class="form-check-label" for="pickup">
+                                    Store Pickup
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="pickup_option" value="delivery" id="delivery">
+                                <label class="form-check-label" for="delivery">
+                                    Home Delivery
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3">Add Items</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">T-Shirts</label>
+                            <input type="number" class="form-control" name="tshirts" value="0" min="0">
+                            <small class="text-muted">₦200 washing / ₦150 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Shorts</label>
+                            <input type="number" class="form-control" name="shorts" value="0" min="0">
+                            <small class="text-muted">₦250 washing / ₦200 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Pants</label>
+                            <input type="number" class="form-control" name="pants" value="0" min="0">
+                            <small class="text-muted">₦300 washing / ₦250 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Caps</label>
+                            <input type="number" class="form-control" name="caps" value="0" min="0">
+                            <small class="text-muted">₦150 washing / ₦100 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Socks</label>
+                            <input type="number" class="form-control" name="socks" value="0" min="0">
+                            <small class="text-muted">₦100 washing / ₦80 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Towels</label>
+                            <input type="number" class="form-control" name="towels" value="0" min="0">
+                            <small class="text-muted">₦350 washing / ₦200 ironing</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Bedsheets</label>
+                            <input type="number" class="form-control" name="bedsheets" value="0" min="0">
+                            <small class="text-muted">₦500 washing / ₦300 ironing</small>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Create Order</button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Pricing Information</h5>
+            </div>
+            <div class="card-body">
+                <h6>Washing Prices:</h6>
+                <ul class="list-unstyled">
+                    <li>T-Shirts: ₦200</li>
+                    <li>Shorts: ₦250</li>
+                    <li>Pants: ₦300</li>
+                    <li>Caps: ₦150</li>
+                    <li>Socks: ₦100</li>
+                    <li>Towels: ₦350</li>
+                    <li>Bedsheets: ₦500</li>
+                </ul>
+                <h6 class="mt-3">Ironing Prices:</h6>
+                <ul class="list-unstyled">
+                    <li>T-Shirts: ₦150</li>
+                    <li>Shorts: ₦200</li>
+                    <li>Pants: ₦250</li>
+                    <li>Caps: ₦100</li>
+                    <li>Socks: ₦80</li>
+                    <li>Towels: ₦200</li>
+                    <li>Bedsheets: ₦300</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
